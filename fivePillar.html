@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+function getData(ymdhm) {
+    const saju01 = ['庚','辛','壬','癸','甲','乙','丙','丁','戊','己'];
+    const saju02 = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+    const saju03 = [
+        {id : 202205, val : 202205052126},
+        {id : 202206, val : 202206060126},
+        {id : 202207, val : 202207071138},
+        {id : 202208, val : 202208072129},
+        {id : 202209, val : 202209080032},
+        {id : 202210, val : 202210081622},
+        {id : 202211, val : 202211071945},
+        {id : 202212, val : 202212071246},
+        {id : 202301, val : 202301060549},
+        {id : 202302, val : 202302041727},
+        {id : 202303, val : 202303051123},
+        {id : 202304, val : 202304041602},
+        {id : 202305, val : 202305050910},
+        {id : 202306, val : 202306051310},
+        {id : 202307, val : 202307062320},
+        {id : 202308, val : 202308070909},
+        {id : 202309, val : 202309071211},
+        {id : 202310, val : 202310071246},
+        {id : 202311, val : 202311070720},
+        {id : 202312, val : 202312070017}
+    ];
+    let now = new Date();
+    let year = now.getFullYear();
+    let month = now.getMonth() + 1;
+    let date = now.getDate();
+    let hour = now.getHours();
+    let min = now.getMinutes();
+
+    if (typeof ymdhm != 'undefined' && ymdhm.length == 12) {
+        year = Number(ymdhm.substr(0,4));
+        month = Number(ymdhm.substr(4,2));
+        date = Number(ymdhm.substr(6,2));
+        hour = Number(ymdhm.substr(8,2));
+        min = Number(ymdhm.substr(10,2));
+    }
+    let fullYmdStr = year +'.'+ addZero(month) +'.'+ addZero(date) +'   '+ addZero(hour) +':'+ addZero(min); 
+
+    //년주계산
+    let yearID = String(year).substr(3,1);
+    let yearEar = (year-2020)%12;
+
+    //절입 일자 계산
+    let yyyyMM = year +''+ addZero(month);
+    //let Exquisiteness = saju03.find(v => v.id === yyyyMM);
+    let Exquisiteness = saju03.filter(function (saju03) { return saju03.id == yyyyMM });
+    Exquisiteness = Exquisiteness[0].val;
+    let nowDateTime = year +''+ addZero(month) +''+ addZero(date) +''+ addZero(hour) +''+ addZero(min);
+    nowDateTime = Number(nowDateTime);
+    if (month == 1 || (month == 2 && nowDateTime < Exquisiteness) ) {
+        yearID = yearID-1;
+        yearEar = yearEar-1;
+    }
+    let dateToday = new Date(year, Number(month)-1, date);
+    if (nowDateTime < Exquisiteness) {
+        month = month-1;
+        if (month == 0) month = 12;
+    }
+
+    //월주계산
+    if (month == 12) month = 0;
+    let monthID = calPillar(month, (year-2020)%12);
+
+    //일주계산
+    //let dateToday = new Date(year, now.getMonth(), date);
+    let dateBase = new Date(2020, 1, 27);//경자년/경자일(2020.02.27)
+    let diffDays = (dateToday.getTime() - dateBase.getTime()) / (24*60*60*1000); //일자수 차이
+    let dateID = diffDays%10;
+    let day = diffDays%12;
+
+    //시주계산
+    let bit = hour%2;
+    hour = (hour+bit)/2;
+    if (hour == 12) hour = 0;
+    let hourID = calPillar(hour, dateID);
+
+    //분주계산
+    let eMin = ''+addZero(min);
+    eMin = Number(eMin.substr(0,1));
+    if (bit == 0) eMin = eMin+6;
+    let minID = calPillar(eMin, hourID);
+
+    let skyYear = saju01[yearID];
+    let earYear = saju02[yearEar];
+
+    let skyMonth = saju01[monthID];
+    let earMonth = saju02[month];
+
+    let skyDay = saju01[dateID];
+    let earDay = saju02[day];
+
+    let skyHour = saju01[hourID];
+    let earHour = saju02[hour];
+
+    let skyMin = saju01[minID];
+    let earMin = saju02[eMin];
+
+    $("#skyYear").text(skyYear);
+    $("#earYear").text(earYear);
+    $("#tenSkyYear").text(tenSky(dateID, yearID));
+    $("#tenEarYear").text(tenEar(dateID, yearEar));
+
+    $("#skyMonth").text(skyMonth);
+    $("#earMonth").text(earMonth);
+    $("#tenSkyMonth").text(tenSky(dateID, monthID));
+    $("#tenEarMonth").text(tenEar(dateID, month));
+
+    $("#skyDay").text(skyDay);
+    $("#earDay").text(earDay);
+    $("#tenSkyDay").text('我');
+    $("#tenEarDay").text(tenEar(dateID, day));
+
+    $("#skyHour").text(skyHour);
+    $("#earHour").text(earHour);
+    $("#tenSkyHour").text(tenSky(dateID, hourID));
+    $("#tenEarHour").text(tenEar(dateID, hour));
+
+    $("#skyMin").text(skyMin);
+    $("#earMin").text(earMin);
+    $("#tenSkyMin").text(tenSky(dateID, minID));
+    $("#tenEarMin").text(tenEar(dateID, eMin));
+
+    $("#skyYear").attr("style", "background:"+skyColor(yearID)+";");
+    $("#earYear").attr("style", "background:"+earColor(yearEar)+";");
+
+    $("#skyMonth").attr("style", "background:"+skyColor(monthID)+";");
+    $("#earMonth").attr("style", "background:"+earColor(month)+";");
+
+    $("#skyDay").attr("style", "background:"+skyColor(dateID)+";");
+    $("#earDay").attr("style", "background:"+earColor(day)+";");
+
+    $("#skyHour").attr("style", "background:"+skyColor(hourID)+";");
+    $("#earHour").attr("style", "background:"+earColor(hour)+";");
+
+    $("#skyMin").attr("style", "background:"+skyColor(minID)+";");
+    $("#earMin").attr("style", "background:"+earColor(eMin)+";");
+
+    $("#fullYmdStr").text(fullYmdStr);
+
+}
+    function calPillar(earID, preSkyID)
+    {
+        let skyID = preSkyID*2;
+        if (skyID >= 10) skyID = skyID-10;
+    
+        //기준:4
+        if (earID > 4) {
+            skyID = skyID + (earID-4);
+            if (skyID >= 10) skyID = skyID-10;
+        }
+        if (earID < 4) {
+            skyID = skyID - (4-earID);
+            if (skyID < 0) skyID = skyID+10;
+        }
+        return skyID;
+    }
+    function addZero(val) {
+        val = val+'';
+        if (val.length < 2) val = '0'+ val;
+        return val;
+    }
+    function skyColor(val) {
+        let rtnColor;
+        if (val == 0 || val == 1) rtnColor = "#FFFFFF";
+        else if (val == 2 || val == 3) rtnColor = "	#696969";
+        else if (val == 4 || val == 5) rtnColor = "#6495ED";
+        else if (val == 6 || val == 7) rtnColor = "#FF4500";
+        else if (val == 8 || val == 9) rtnColor = "#FFD700";
+        return rtnColor;
+    }
+    function earColor(val) {
+        let rtnColor;
+        if (val == 0 || val == 11) rtnColor = "	#696969";
+        else if (val == 2 || val == 3) rtnColor = "#6495ED";
+        else if (val == 5 || val == 6) rtnColor = "#FF4500";
+        else if (val == 8 || val == 9) rtnColor = "#FFFFFF";
+        else rtnColor = "#FFD700";
+        return rtnColor;
+    }
+    function tenSky(base, skyID) {
+        let rtnStr = "";
+        skyID = Number(skyID);
+        if (base > skyID) skyID = skyID + 10;
+        let starID = base - skyID;
+        if (starID == 0) rtnStr = "비견";
+        if (base%2 == 0) {
+            if (starID == -1) rtnStr = "겁재";
+            if (starID == -2) rtnStr = "식신";
+            if (starID == -3) rtnStr = "상관";
+            if (starID == -4) rtnStr = "편재";
+            if (starID == -5) rtnStr = "정재";
+            if (starID == -6) rtnStr = "편관";
+            if (starID == -7) rtnStr = "정관";
+            if (starID == -8) rtnStr = "편인";
+            if (starID == -9) rtnStr = "정인";
+        } else {
+            if (starID == -1) rtnStr = "상관";
+            if (starID == -2) rtnStr = "식신";
+            if (starID == -3) rtnStr = "정재";
+            if (starID == -4) rtnStr = "편재";
+            if (starID == -5) rtnStr = "정관";
+            if (starID == -6) rtnStr = "편관";
+            if (starID == -7) rtnStr = "정인";
+            if (starID == -8) rtnStr = "편인";
+            if (starID == -9) rtnStr = "겁재";
+        }
+        return rtnStr;
+    }
+    function tenEar(base, earID) {
+        earID = Number(earID);
+        if (earID == 0) earID = 3;
+        else if (earID == 1) earID = 9;
+        else if (earID == 2) earID = 4;
+        else if (earID == 3) earID = 5;
+        else if (earID == 4) earID = 8;
+        else if (earID == 5) earID = 6;
+        else if (earID == 6) earID = 7;
+        else if (earID == 7) earID = 9;
+        else if (earID == 8) earID = 0;
+        else if (earID == 9) earID = 1;
+        else if (earID == 10) earID = 8;
+        else if (earID == 11) earID = 2;
+        return tenSky(base, earID);
+    }
+    function setData() {
+        let ymdhm = prompt('년월일시분을 입력하세요.')
+        getData(ymdhm);
+    }
+</script>
+<style>
+    table.type11 {
+      border-collapse: separate;
+      border-spacing: 2px;
+      text-align: center;
+      line-height: 2;
+      margin-top: 50px;
+      margin-left: auto;
+      margin-right: auto;
+      font-family: 궁서;
+      font-size:24pt;
+    }
+    table.type11 th {
+      width: auto;
+      padding: 10px;
+      font-weight: bold;
+      vertical-align: top;
+      color: #fff;
+      background: #000080 ;
+    }
+    table.type11 td {
+      width: 80px;
+      padding: 10px;
+      vertical-align: top;
+      border-bottom: 1px solid #ccc;
+      background: #eee;
+    }
+</style>
+</head>
+
+<body align="center">
+
+    <table class="type11">
+        <thead>
+            <tr>
+                <th scope="cols" colspan="5">오주괘</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td id="tenSkyMin"></td>
+                <td id="tenSkyHour"></td>
+                <td id="tenSkyDay"></td>
+                <td id="tenSkyMonth"></td>
+                <td id="tenSkyYear"></td>
+            </tr>
+            <tr>
+                <td id="skyMin"></td>
+                <td id="skyHour"></td>
+                <td id="skyDay"></td>
+                <td id="skyMonth"></td>
+                <td id="skyYear"></td>
+            </tr>
+            <tr>
+                <td id="earMin"></td>
+                <td id="earHour"></td>
+                <td id="earDay"></td>
+                <td id="earMonth"></td>
+                <td id="earYear"></td>
+            </tr>
+            <tr>
+                <td id="tenEarMin"></td>
+                <td id="tenEarHour"></td>
+                <td id="tenEarDay"></td>
+                <td id="tenEarMonth"></td>
+                <td id="tenEarYear"></td>
+            </tr>
+        </tbody>
+    </table>
+    <p id="fullYmdStr" style="text-align: center;font-size:24pt;"></p>
+    <button onclick="getData()">조회</button>
+    <button onclick="setData()">날짜입력</button>
+
+</body>
+</html>
