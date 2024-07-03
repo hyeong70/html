@@ -279,6 +279,11 @@ function getData(ymdhm) {
       border-bottom: 1px solid #ccc;
       background: #eee;
     }
+    button.my_btn {
+      width: 150px;
+	  padding: 10px 30px;
+      font-size:16pt;
+	}
 </style>
 </head>
 
@@ -322,9 +327,9 @@ function getData(ymdhm) {
         </tbody>
     </table>
     <p id="fullYmdStr" style="text-align: center;font-size:24pt;"></p>
-    <p><input type="tel" id="localDateTime" maxlength="12"></p>
-    <button onclick="getData()">조회</button>
-    <button onclick="setData()">날짜입력</button>
+    <p><input type="tel" id="localDateTime" maxlength="12" style="text-align: center;font-size:24pt;"></p>
+    <button class="my_btn" onclick="getData()">조회</button>
+    <button class="my_btn" onclick="setData()">날짜입력</button>
 
 </body>
 </html>
