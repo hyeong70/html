@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+var localDateTime;
 function getData(ymdhm) {
     const saju01 = ['庚','辛','壬','癸','甲','乙','丙','丁','戊','己'];
     const saju02 = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
@@ -56,7 +57,9 @@ function getData(ymdhm) {
         min = Number(ymdhm.substr(10,2));
     }
     let fullYmdStr = year +'.'+ addZero(month) +'.'+ addZero(date) +'   '+ addZero(hour) +':'+ addZero(min); 
-
+    localDateTime = year + addZero(month) + addZero(date) + addZero(hour) + addZero(min);
+    $("#localDateTime").val(localDateTime);
+    
     //년주계산
     let yearID = String(year).substr(3,1);
     let yearEar = (year-2020)%12;
@@ -244,7 +247,8 @@ function getData(ymdhm) {
         return tenSky(base, earID);
     }
     function setData() {
-        let ymdhm = prompt('년월일시분을 입력하세요.')
+        //let ymdhm = prompt('년월일시분을 입력하세요.')
+        let ymdhm = $("#localDateTime").val();
         getData(ymdhm);
     }
 </script>
@@ -318,6 +322,7 @@ function getData(ymdhm) {
         </tbody>
     </table>
     <p id="fullYmdStr" style="text-align: center;font-size:24pt;"></p>
+    <p><input type="tel" id="localDateTime" maxlength="12"></p>
     <button onclick="getData()">조회</button>
     <button onclick="setData()">날짜입력</button>
 
