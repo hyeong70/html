@@ -244,7 +244,7 @@ function getData(ymdhm) {
     }
     function tenEar(base, earID) {
         earID = Number(earID);
-        if (earID == 0) earID = 3;
+        if (earID == 0 || earID == 12) earID = 3;
         else if (earID == 1) earID = 9;
         else if (earID == 2) earID = 4;
         else if (earID == 3) earID = 5;
