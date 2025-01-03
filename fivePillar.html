@@ -90,12 +90,12 @@ function getData(ymdhm) {
     let dateToday = new Date(year, Number(month)-1, date);
     if (nowDateTime < Exquisiteness) {
         month = month-1;
-        if (month == 0) month = 12;
+        //if (month == 0) month = 12;
     }
 
     //월주계산
-    if (month == 12) month = 0;
-    let monthID = calPillar(month, (year-2020)%12);
+    //if (month == 12) month = 0;
+    let monthID = calPillar(month, (year-2020)%10);
 
     //일주계산
     //let dateToday = new Date(year, now.getMonth(), date);
@@ -206,7 +206,7 @@ function getData(ymdhm) {
     }
     function earColor(val) {
         let rtnColor;
-        if (val == 0 || val == 11) rtnColor = "	#696969";
+        if (val == 0 || val == 11 || val == 12) rtnColor = "#696969";
         else if (val == 2 || val == 3) rtnColor = "#6495ED";
         else if (val == 5 || val == 6) rtnColor = "#FF4500";
         else if (val == 8 || val == 9) rtnColor = "#FFFFFF";
