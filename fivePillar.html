@@ -327,6 +327,9 @@ function getData(ymdhm) {
         padding: 10px 30px 10px 10px; /* 화살표를 위해 우측 여백을 넉넉하게 줍니다 */
         font-size: 16px;
     }
+    p.custom {
+        font-size: 20px;
+    }
 </style>
 </head>
 
@@ -373,85 +376,18 @@ function getData(ymdhm) {
     <p><input type="tel" id="localDateTime" maxlength="12" style="text-align: center;font-size:24pt;"></p>
     <button class="my_btn" onclick="getData()">조회</button>
     <button class="my_btn" onclick="setData()">날짜입력</button>
-    <p>
+    <p class="custom">
         월 
-        <select class="custom-select" onChange="setMon(this.value)">
-            <option value="01">01</option>
-            <option value="02">02</option>
-            <option value="03">03</option>
-            <option value="04">04</option>
-            <option value="05">05</option>
-            <option value="06">06</option>
-            <option value="07">07</option>
-            <option value="08">08</option>
-            <option value="09">09</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
+        <select class="custom-select" id="selMonth" onChange="setMon(this.value)">
         </select>
-        &nbsp;&nbsp;날짜 
-        <select class="custom-select" onChange="setDay(this.value)">
-            <option value="01">01</option>
-            <option value="02">02</option>
-            <option value="03">03</option>
-            <option value="04">04</option>
-            <option value="05">05</option>
-            <option value="06">06</option>
-            <option value="07">07</option>
-            <option value="08">08</option>
-            <option value="09">09</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
-            <option value="20">20</option>
-            <option value="21">21</option>
-            <option value="22">22</option>
-            <option value="23">23</option>
-            <option value="24">24</option>
-            <option value="25">25</option>
-            <option value="26">26</option>
-            <option value="27">27</option>
-            <option value="28">28</option>
-            <option value="29">29</option>
-            <option value="30">30</option>
-            <option value="31">31</option>
+        날짜 
+        <select class="custom-select" id="selDay" onChange="setDay(this.value)">
         </select>
-        &nbsp;&nbsp;시간 
-        <select class="custom-select" onChange="setHour(this.value)">
-            <option value="00">00</option>
-            <option value="01">01</option>
-            <option value="02">02</option>
-            <option value="03">03</option>
-            <option value="04">04</option>
-            <option value="05">05</option>
-            <option value="06">06</option>
-            <option value="07">07</option>
-            <option value="08">08</option>
-            <option value="09">09</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
-            <option value="20">20</option>
-            <option value="21">21</option>
-            <option value="22">22</option>
-            <option value="23">23</option>
+        시간 
+        <select class="custom-select" id="selHour" onChange="setHour(this.value)">
         </select>
-        &nbsp;&nbsp;분 
-        <select class="custom-select" onChange="setMin(this.value)">
+        분 
+        <select class="custom-select" id="selMin" onChange="setMin(this.value)">
             <option value="05">05</option>
             <option value="15">15</option>
             <option value="25">25</option>
@@ -462,4 +398,10 @@ function getData(ymdhm) {
     </p>
 
 </body>
+<script>
+    setSelect('selMonth', 1, 12);
+    setSelect('selDay', 1, 31);
+    setSelect('selHour', 0, 23);
+    //setSelect('selMin', 0, 59);
+</script>
 </html>
