@@ -290,6 +290,42 @@ function getData(ymdhm) {
         let ymdHourM = ymdH+''+min;
         getData(ymdHourM);
     }
+    function setSelect(id, from, to) {
+        getData();
+        let ymdhm = $("#localDateTime").val();
+        let month = ymdhm.substring(4,6);
+        let date = ymdhm.substring(6,8);
+        let hour = ymdhm.substring(8,10);
+        let min = ymdhm.substring(10);
+        let desiredValue = "";
+
+        if(id == "selMonth") desiredValue = month;
+        else if(id == "selDay") desiredValue = date;
+        else if(id == "selHour") desiredValue = hour;
+
+        // 1. select 요소 가져오기
+        const selectElement = document.getElementById(id);
+    
+        // 2. 1부터 31까지 반복
+        for (let i = from; i <= to; i++) {
+            // 3. 숫자를 문자열로 변환하고 두 자리로 패딩 처리
+            // 예: 1은 '01', 10은 '10'
+            const paddedNumber = String(i).padStart(2, '0');
+            
+            // 4. 새로운 <option> 요소 생성
+            const option = document.createElement('option');
+            
+            // 5. option의 'value'와 'text' 설정
+            // value와 text 모두 '01', '02', ... 형식으로 설정됩니다.
+            option.value = paddedNumber;
+            option.textContent = paddedNumber;
+            
+            // 6. select 요소에 option 추가
+            selectElement.appendChild(option);
+
+            selectElement.value = desiredValue;
+        }
+    }
 </script>
 <style>
     table.type11 {
