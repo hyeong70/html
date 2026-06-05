@@ -253,6 +253,11 @@ function setSelect(id, from, to) {
         else if (30 < min && min < 39) desiredValue = 35;
         else if (40 < min && min < 49) desiredValue = 45;
         else if (50 < min && min < 59) desiredValue = 55;
+
+        const option = document.createElement('option');
+        selectElement.appendChild(option);
+        selectElement.value = desiredValue;
+		return;
     }
 
     // 2. 1부터 31까지 반복
